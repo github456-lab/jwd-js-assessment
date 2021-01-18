@@ -19,50 +19,116 @@
       5. Add a countdown timer - when the time is up, end the quiz, display the score and highlight the correct answers
 *************************** */
 
-window.addEventListener('DOMContentLoaded', () => {
-  const start = document.querySelector('#start');
-  start.addEventListener('click', function (e) {
-    document.querySelector('#quizBlock').style.display = 'block';
-    start.style.display = 'none';
+window.addEventListener("DOMContentLoaded", () => {
+  const start = document.querySelector("#start");
+  start.addEventListener("click", function (e) {
+    document.querySelector("#quizBlock").style.display = "block";
+    start.style.display = "none";
+
   });
+
+  function timer() {
+    var hour=00
+    //edit seconds
+    var sec = 10; 
+    //edit min
+    var min= 00;
+    if (min>0)
+    {
+      sec=60;
+        min=min-1;
+      
+    }
+    if (sec <10)
+    {
+      sec= `0${sec}`;
+    }
+      if (min < 10) {
+        min = `0${min}`;
+      }
+    var timer = setInterval(function () {
+      document.getElementById("time").innerHTML = `0${hour}:${min}:${sec}`;
+      
+      if (sec==0){
+        if (min >0){
+          min=min-1;
+          min=`0${min}`;
+          sec=60;
+        }
+
+      }
+      sec--;
+     
+      if (sec < 0) {
+        clearInterval(timer);
+      }
+      if (sec < 10) {
+        sec = `0${sec}`;
+      }
+      if (min==0){
+       if (sec == 0) {
+         
+       //alert("You have exceeded 2 minutes quiz time");
+          document.getElementById("errMsg").innerHTML =
+            "Sorry! Exceeded 2 mins quiz time.Please Click Reset button at the bottom to do the quiz again";
+          document.getElementById("errMsg").classList.add("errmsg");
+          document.getElementById("time").innerHTML = "00:00:00";
+          calculateScore();
+          
+       }
+      }
+    }, 1000);
+    
+  }
   // quizArray QUESTIONS & ANSWERS
   // q = QUESTION, o = OPTIONS, a = CORRECT ANSWER
   // Basic ideas from https://code-boxx.com/simple-javascript-quiz/
   const quizArray = [
     {
-      q: 'Which is the third planet from the sun?',
-      o: ['Saturn', 'Earth', 'Pluto', 'Mars'],
+      q: "Which is the third planet from the sun?",
+      o: ["Saturn", "Earth", "Pluto", "Mars"],
       a: 1, // array index 1 - so Earth is the correct answer here
     },
     {
-      q: 'Which is the largest ocean on Earth?',
-      o: ['Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean', 'Pacific Ocean'],
+      q: "Which is the largest ocean on Earth?",
+      o: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
       a: 3,
     },
     {
-      q: 'What is the capital of Australia',
-      o: ['Sydney', 'Canberra', 'Melbourne', 'Perth'],
+      q: "What is the capital of Australia",
+      o: ["Sydney", "Canberra", "Melbourne", "Perth"],
       a: 1,
+    },
+    {
+      q: "Which Australian state is the biggest (by size)?",
+      o: ["Queensland", "Victoria", "Western Australia", "New South Wales"],
+      a: 2,
+    },
+    {
+      q: "How many states does Australia have?",
+      o: ["4", "5", "7", "6"],
+      a: 3,
     },
   ];
 
   // function to Display the quiz questions and answers from the object
   const displayQuiz = () => {
-    const quizWrap = document.querySelector('#quizWrap');
-    let quizDisplay = '';
+    const quizWrap = document.querySelector("#quizWrap");
+    let quizDisplay = "";
     quizArray.map((quizItem, index) => {
       quizDisplay += `<ul class="list-group">
                    Q - ${quizItem.q}
                     <li class="list-group-item mt-2" id="li_${index}_0"><input type="radio" name="radio${index}" id="radio_${index}_0"> ${quizItem.o[0]}</li>
-                    <li class="list-group-item" id="li_${index}_1"><input type="radio" name="radio${index}" id="radio_${index}_1"> ${quizItem.o[1]}</li>
-                    <li class="list-group-item"  id="li_${index}_2"><input type="radio" name="radio${index}" id="radio_${index}_2"> ${quizItem.o[2]}</li>
-                    <li class="list-group-item"  id="li_${index}_3"><input type="radio" name="radio${index}" id="radio_${index}_3"> ${quizItem.o[3]}</li>
+                    <li class="list-group-item" id="li_${index}_1"><input type="radio" name="radio${index}" id="radio_${index}_1" > ${quizItem.o[1]}</li>
+                    <li class="list-group-item"  id="li_${index}_2"><input type="radio" name="radio${index}" id="radio_${index}_2" > ${quizItem.o[2]}</li>
+                    <li class="list-group-item"  id="li_${index}_3"><input type="radio" name="radio${index}" id="radio_${index}_3" > ${quizItem.o[3]}</li>
                     </ul>
                     <div>&nbsp;</div>`;
       quizWrap.innerHTML = quizDisplay;
     });
+    timer();
   };
-
+  btnSubmit = document.querySelector("#btnSubmit");
   // Calculate the score
   const calculateScore = () => {
     let score = 0;
@@ -71,19 +137,46 @@ window.addEventListener('DOMContentLoaded', () => {
         //highlight the li if it is the correct answer
         let li = `li_${index}_${i}`;
         let r = `radio_${index}_${i}`;
-        liElement = document.querySelector('#' + li);
-        radioElement = document.querySelector('#' + r);
+        liElement = document.querySelector("#" + li);
+        radioElement = document.querySelector("#" + r);
+        let scoreDis = document.querySelector("#score");
 
         if (quizItem.a == i) {
           //change background color of li element here
+          liElement.classList.add("changecolor");
         }
 
         if (radioElement.checked) {
           // code for task 1 goes here
+
+          //alert(i);
+          if (quizItem.a === i) {
+            score += 1;
+            //alert(i);
+            //scoreDis.innerHTML = `Your score is ${score}`;
+          }
+        }
+        btnSubmit.style.display='none';
+        document.getElementById("errMsg").style.display='none';
+         
+        if (score == 5) {
+          scoreDis.innerHTML = `Your score is ${score}. Prefect score!`;
+          scoreDis.classList.add("showscore");
+        } else {
+          scoreDis.innerHTML = `Your score is ${score} . Please Try Again! by clicking Reset Quiz button`;
+          scoreDis.classList.add("showscore");
+          
         }
       }
     });
   };
+  const resetPage = () => {
+    window.location.reload(false);
+  };
+
+  btnSubmit.addEventListener("click", calculateScore);
+  btnReset = document.querySelector("#btnReset");
+  btnReset.addEventListener("click", resetPage);
 
   // call the displayQuiz function
   displayQuiz();

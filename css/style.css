@@ -1,0 +1,11 @@
+
+.changecolor{
+    background-color:greenyellow;
+}
+.showscore{
+    background-color:orange;
+}
+.errmsg{
+    color:red;
+    background-color: yellow;
+}
