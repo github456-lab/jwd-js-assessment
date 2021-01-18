@@ -29,9 +29,9 @@ window.addEventListener("DOMContentLoaded", () => {
   function timer() {
     var hour = 00;
     //edit seconds
-    var sec = 00;
+    var sec = 35;
     //edit min
-    var min = 02;
+    var min = 00;
     if (min > 0) {
       sec = 60;
       min = min - 1;
@@ -62,11 +62,14 @@ window.addEventListener("DOMContentLoaded", () => {
       }
       if (min == 0) {
         if (sec == 0) {
-          //alert("You have exceeded 2 minutes quiz time");
+          
+           document.getElementById("time").innerHTML = "00:00:00 ";
+          // windo.preventDefault();
+         // alert("You have exceeded 2 minutes quiz time");
           document.getElementById("errMsg").innerHTML =
             "Sorry! Exceeded 2 mins quiz time.Please Click Reset button at the bottom to do the quiz again";
           document.getElementById("errMsg").classList.add("errmsg");
-          document.getElementById("time").innerHTML = "00:00:00";
+         
           calculateScore();
         }
       }
@@ -102,7 +105,7 @@ window.addEventListener("DOMContentLoaded", () => {
       a: 3,
     },
   ];
-
+ timer();
   // function to Display the quiz questions and answers from the object
   const displayQuiz = () => {
     const quizWrap = document.querySelector("#quizWrap");
@@ -118,7 +121,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     <div>&nbsp;</div>`;
       quizWrap.innerHTML = quizDisplay;
     });
-    timer();
+   
   };
   btnSubmit = document.querySelector("#btnSubmit");
   // Calculate the score
@@ -149,26 +152,27 @@ window.addEventListener("DOMContentLoaded", () => {
           }
         }
         btnSubmit.style.display = "none";
-        document.getElementById("errMsg").style.display = "none";
+       document.getElementById("errMsg").style.display = "none";
 
         if (score == 5) {
           scoreDis.innerHTML = `Your score is ${score}. Prefect score!`;
           scoreDis.classList.add("showscore");
         } else {
-          scoreDis.innerHTML = `Your score is ${score} . Please Try Again! by clicking Reset Quiz button`;
+          scoreDis.innerHTML = `Your score is ${score}/${index+1} . Please Try Again! by clicking Reset Quiz button`;
           scoreDis.classList.add("showscore");
         }
       }
     });
   };
   const resetPage = () => {
-    window.location.reload(false);
+   // window.location.reload(false);
+    location.reload();
   };
 
   btnSubmit.addEventListener("click", calculateScore);
   btnReset = document.querySelector("#btnReset");
   btnReset.addEventListener("click", resetPage);
-
+ 
   // call the displayQuiz function
   displayQuiz();
 });
